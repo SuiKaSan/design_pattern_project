@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command and Closure (using tv switch as an example)</title>
+</head>
+
+<body>
+    <div style="width: 200px; height: 100px; background-color: deepskyblue; margin: 0 auto; text-align: center;">
+        <div style="height: 100%; margin: 0 75px; display: flex; flex-direction: column; justify-content: center;">
+            <button id="on" style="margin-bottom: 10px;">Tv on</button>
+            <button id="off">Tv off</button>
+        </div>
+    </div>
+</body>
+<script>
+    // 创建电视对象
+    const tv = {
+        name: "samsung",
+        open: function () {
+            console.log("tv is open.");
+        },
+        close: function () {
+            console.log("tv is close.");
+        }
+    }
+
+    // 使用闭包创建命令 可以保存命令对象本身
+    const createCommand = function (obj) {
+        let execute = function () {
+            return obj.open();
+        }
+
+        let undo = function () {
+            return obj.close();
+        }
+
+        return {
+            execute,
+            undo
+        }
+    }
+
+
+
+    const setCommand = function (command) {
+        document.getElementById("on").onclick = function () {
+            command.execute();
+        }
+
+        document.getElementById("off").onclick = function () {
+            command.undo();
+        }
+    }
+
+
+    setCommand(createCommand(tv));
+
+</script>
+
+</html>
