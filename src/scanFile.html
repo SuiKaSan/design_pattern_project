@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="button1">开始扫描</button>
+    <button id="button2">移除文件夹</button>
+</body>
+<script>
+    let button1 = document.getElementById("button1");
+    let button2 = document.getElementById("button2");
+
+    // 创建文件夹对象
+    const Folder = function (name) {
+        this.name = name;
+        this.parent = null;
+        this.files = [];
+    }
+
+    Folder.prototype.add = function (file) {
+        file.parent = this;
+        this.files.push(file);
+    }
+
+    Folder.prototype.scan = function () {
+        this.files.forEach((file) => {
+            file.scan();
+        });
+    }
+
+    Folder.prototype.remove = function () {
+
+        if (!this.parent) {
+            return;
+        }
+
+
+        for (let files = this.parent.files, l = files.length - 1; l >= 0; l--) {
+            let file = files[l];
+            if (file === this) {
+                files.splice(l, 1);
+            }
+        }
+    }
+
+    // 创建文件对象
+    const File = function (name) {
+        this.name = name;
+        this.parent = null;
+    }
+
+    File.prototype.scan = function () {
+        console.log("开始扫描文件:", this.name);
+    }
+
+
+    File.prototype.remove = function () {
+        if (!this.parent) {
+            return;
+        }
+
+        this.files.forEach((file, index) => {
+            if (file === this) {
+                files.splice(index, 1);
+            }
+        });
+    }
+
+
+    // 开始添加文件
+
+    // 文件夹A
+    let folderA = new Folder("编程");
+    let fileAA = new File("C");
+    let fileAB = new File("java");
+    let fileAC = new File("python");
+    let fileAD = new File("go");
+    folderA.add(fileAA);
+    folderA.add(fileAB);
+    folderA.add(fileAC);
+    folderA.add(fileAD);
+
+
+    // 文件夹B
+    let folderB = new Folder("JavaScript");
+    let fileBA = new File("数据结构");
+    let fileBB = new File("代码优雅之道");
+    let fileBC = new File("算法");
+    folderB.add(fileBA);
+    folderB.add(fileBB);
+    folderB.add(fileBC);
+    // 将文件夹B放到文件夹A下
+    folderA.add(folderB);
+
+
+    // 文件夹C
+    let folderC = new Folder("设计模式");
+    let fileCA = new File("装饰器模式");
+    let fileCB = new File("工厂模式");
+    let fileCC = new File("单例模式");
+    folderC.add(fileCA);
+    folderC.add(fileCB);
+    folderC.add(fileCC);
+    // 将文件夹B放到文件夹A下
+    folderB.add(folderC);
+
+
+
+    let setCommand1 = (function (folder) {
+        button1.onclick = function () {
+            folder.scan()
+        }
+    })(folderA)
+
+
+    let setCommand2 = (function (folder) {
+        button2.onclick = function () {
+            console.log("开始移除文件夹", folder);
+            folder.remove();
+        }
+    })(folderC)
+
+
+
+</script>
+
+</html>
