@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script type="text/javascript">
+    let toolTipFactory = (function () {
+        const objPool = []; // 对象池
+        return {
+            create: function () {
+                if (objPool.length === 0) {
+                    const dom = document.createElement("div");
+                    document.body.appendChild(dom);
+                    return dom;
+                } else {
+                    return objPool.shift();
+                }
+            },
+            recover: function (obj) {
+                return objPool.push(obj);
+            }
+        }
+    })();
+
+    // arr 用于存储 方便回收
+    let arr = [];
+    // 创建两个小气泡
+    for (let i = 0, str; str = ["A", "B"][i++];) {
+        let toolTip = toolTipFactory.create();
+        toolTip.innerHTML = str
+        arr.push(toolTip);
+    }
+
+    // 回收小气泡
+    for (let i = 0, toolTip; toolTip = arr[i++];) {
+        toolTipFactory.recover(toolTip);
+    }
+
+    // 再创建六个小气泡
+    for (let i = 0, str; str = ["A", "B", "C", "D", "E", "F", "G"][i++];) {
+        let toolTip = toolTipFactory.create();
+        toolTip.innerHTML = str
+    }
+</script>
+
+</html>
